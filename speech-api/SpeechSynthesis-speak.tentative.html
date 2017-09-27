@@ -2,15 +2,15 @@
 <script src="/resources/testharness.js"></script>
 <script src="/resources/testharnessreport.js"></script>
 <script>
-// test for reuse of https://github.com/w3c/speech-api/issues/7
+// test for https://github.com/w3c/speech-api/issues/7
 async_test(t => {
-  var utter = new SpeechSynthesisUtterance('Hello World');
+  // the utterance is as short to make the test faster
+  var utter = new SpeechSynthesisUtterance('1');
   speechSynthesis.speak(utter);
   utter.onend = t.step_func(() => {
-    // Edge, WebKit and Blink allow this, but Firefox doesn't.
     speechSynthesis.speak(utter);
-    // pass as long as no exception was thrown
-    t.done();
+    // pass if the utterance finishes a second time
+    utter.onend = t.step_func_done();
   });
 }, 'Using the same SpeechSynthesisUtterance twice for speechSynthesis.speak()');
 </script>
